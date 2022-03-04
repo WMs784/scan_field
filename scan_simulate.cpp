@@ -4,13 +4,15 @@
 
 using namespace std;
 
-const int length = 80,width = 40, det_dis = 10;
+const int length = 20,width = 20, det_dis = 10;
 int cur_x = length/2, cur_y = width/2;
-int tg_x,tg_y;
-vector<vector<int> > field_map(length,vector<int>(width,0));
+int tg_x = 0,tg_y = 0;
+vector<vector<int> > field_map(length,vector<int>(width,1));
 const int dx[4] = {0,1,0,-1}, dy[4] = {1,0,-1,0};
-bool seen[length][width];
+vector<vector<bool> > seen(length,vector<bool>(width,false));
 queue<int> que;
+
+//map 0:障害物なし,1:未探査,2:障害物あり 
 
 void set_map(float r,float theta){
     int x = cur_x + r*sin(theta), y = cur_y + r*cos(theta);
@@ -19,39 +21,31 @@ void set_map(float r,float theta){
         rep(j,width){
             if(field_map[i][j] == 2)continue;
             if((i-x)*(i-x) + (j-y)*(j-y) < 10) field_map[i][j] = 2;
-            else if((cur_x-i)*(cur_x-i) + (cur_y-j)*(cur_y-j) < det_dis*det_dis)field_map[i][j] = max(field_map[i][j],1);
+            else if((cur_x-i)*(cur_x-i) + (cur_y-j)*(cur_y-j) < det_dis*det_dis && field_map[i][j] != 2)field_map[i][j] = 0;
         }
     }
-    field_map[cur_x][cur_y] = 100;
+    // field_map[cur_x][cur_y] = 100;
 }
-void bfs(int x,int y){
-    que.push(100*cur_x+cur_y);
+int bfs(){
     while (!que.empty()){
+        int xy = que.front();
+        // cout << xy << ' ';
+        que.pop();
+        int x = xy/100,y = xy%100;
+        seen[x][y] = true;
         rep(dir,4){
             int xd = x + dx[dir], yd = y + dy[dir];
             if(xd < 0 || xd >= length || yd < 0 || yd >= width)continue;
             if(field_map[xd][yd] == 2)continue;
             if(seen[xd][yd])continue;
             que.push(100*xd+yd);
-            if(field_map[xd][yd] == 0){
-                tg_x = xd, tg_y = yd;
+            seen[xd][yd] = true;
+            if(field_map[xd][yd] == 1){
+                return xd*100+yd;
             }
         }
     }
-    // rep(dir,4){
-    //     int xd = x + dx[dir], yd = y + dy[dir];
-    //     if(xd < 0 || xd >= length || yd < 0 || yd >= width)continue;
-    //     if(field_map[xd][yd] == 2)continue;
-    //     if(seen[xd][yd])continue;
-    //     if(field_map[xd][yd] == 0){
-    //         que.push(100*xd+yd);
-    //     }
-    //     while(!que.empty()){
-    //         int px = que.front()/100, py = que.front()%100;
-    //         que.pop();
-
-    //     }
-    // }
+    return 9999;
 }
 
 // void scan(){
@@ -64,8 +58,12 @@ int main(){
     rep(i,180/div){
         set_map(r,i*div);
     }
-    bfs(cur_x,cur_y);
-    cout << tg_x*100+tg_y << endl;
+    que.push(100*cur_x+cur_y);
+    cout << bfs() << endl;
+    rep(i,length){
+        rep(j,width)cout << seen[i][j] << ' ';
+        cout << endl;
+    }
     rep(i,length){
         rep(j,width)cout << field_map[i][j] << ' ';
         cout << endl;
