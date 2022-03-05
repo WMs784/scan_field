@@ -48,9 +48,20 @@ int bfs(){
     return 9999;
 }
 
-// void scan(){
-    
-// }
+vector<float> move(int cur,int goal){
+    vector<float> road(2,0.0);
+    if(goal == 9999)return road;
+    else{
+        float cx = cur/100,cy = cur%100;
+        float gx = goal/100,gy = goal%100;
+        float r = sqrt((cx-gx)*(cx-gx)+(cy-gy)*(cy-gy));
+        float t = (cx-gx)/(cy-gy);
+        cout << t << endl;
+        float theta = atan(t);
+        road[0] = r,road[1] = theta;
+        return road;
+    }
+}
 
 int main(){
     float r = 10.0, theta = 30.0;
@@ -68,4 +79,7 @@ int main(){
         rep(j,width)cout << field_map[i][j] << ' ';
         cout << endl;
     }
+    int cur = cur_x*100+cur_y;
+    vector<float> trans = move(cur,bfs());
+    rep(i,2)cout << trans[i] << ' ';
 }
