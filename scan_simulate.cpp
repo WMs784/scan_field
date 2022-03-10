@@ -1,4 +1,8 @@
-#include <bits/stdc++.h>
+#include "vector"
+#include "iostream"
+#include "string"
+#include "queue"
+#include "scan_simulate.h"
 
 #define rep(i,n) for(int i = 0;i <(int)n;i++)
 
