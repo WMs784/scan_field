@@ -1,3 +1,5 @@
 {
-    "port": "/dev/tty.Bluetooth-Incoming-Port"
+    "port": "/dev/tty.Bluetooth-Incoming-Port",
+    "board": "arduino:avr:uno",
+    "sketch": "scan_field.ino"
 }
